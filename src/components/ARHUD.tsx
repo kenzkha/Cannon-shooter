@@ -267,18 +267,18 @@ export const ARHUD: React.FC<ARHUDProps> = ({
       )}
 
       {/* Bottom Control Deck */}
-      <div className="flex items-end justify-between gap-3 pointer-events-auto">
+      <div className="flex items-end justify-between gap-3 pointer-events-auto pb-4 sm:pb-6 relative">
         {/* Left Controls: Weapon Swap Deck & Calibrate */}
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-col gap-2 relative z-10 w-32">
           {/* Calibrate & Camera Toggle */}
           <div className="flex gap-2">
             <button
               onClick={onCalibrateGyro}
-              className="px-2.5 py-1.5 rounded-lg bg-slate-950/80 hover:bg-slate-800 border border-cyan-500/40 text-cyan-300 flex items-center gap-1.5 text-[10px] font-orbitron transition active:scale-95 shadow-md"
+              className="flex-1 py-1.5 rounded-lg bg-slate-950/80 hover:bg-slate-800 border border-cyan-500/40 text-cyan-300 flex items-center justify-center gap-1.5 text-[10px] font-orbitron transition active:scale-95 shadow-md"
               title="Calibrate Center"
             >
               <RotateCcw className="w-3 h-3 text-cyan-400" />
-              <span>{lang === 'id' ? 'RESET BIDIK' : 'RECENTER'}</span>
+              <span>{lang === 'id' ? 'RESET' : 'RECENTER'}</span>
             </button>
 
             <button
@@ -291,7 +291,7 @@ export const ARHUD: React.FC<ARHUDProps> = ({
           </div>
 
           {/* Weapon Swapper Cards */}
-          <div className="flex gap-1.5 bg-slate-950/80 backdrop-blur-md p-1.5 rounded-xl border border-slate-800 shadow-xl">
+          <div className="flex flex-col gap-1.5 bg-slate-950/80 backdrop-blur-md p-1.5 rounded-xl border border-slate-800 shadow-xl">
             {weaponsList.map((w, idx) => {
               const wInfo = WEAPONS_DATA[w];
               const isSelected = currentWeapon === w;
@@ -300,15 +300,15 @@ export const ARHUD: React.FC<ARHUDProps> = ({
                 <button
                   key={w}
                   onClick={() => onSwitchWeapon(w)}
-                  className={`flex flex-col items-center px-2 py-1 rounded-lg transition-all text-left ${
+                  className={`flex items-center gap-2 px-2 py-1.5 rounded-lg transition-all text-left ${
                     isSelected
-                      ? 'bg-cyan-500/20 border border-cyan-400 shadow-[0_0_12px_rgba(6,182,212,0.4)] scale-105'
+                      ? 'bg-cyan-500/20 border border-cyan-400 shadow-[0_0_12px_rgba(6,182,212,0.4)] scale-105 ml-2'
                       : 'bg-slate-900/60 hover:bg-slate-800 border border-transparent opacity-75'
                   }`}
                 >
-                  <span className="text-[8px] font-mono text-slate-400">[{idx + 1}]</span>
+                  <span className="text-[9px] font-mono text-slate-500 w-3">[{idx + 1}]</span>
                   <span
-                    className="text-[9px] sm:text-[10px] font-orbitron font-bold whitespace-nowrap"
+                    className="text-[10px] font-orbitron font-bold whitespace-nowrap"
                     style={{ color: isSelected ? wInfo.color : '#94a3b8' }}
                   >
                     {lang === 'id' ? (w === 'PULSE_CANNON' ? 'PLASMA' : w === 'SCATTER_BLAST' ? 'FLAK' : 'RAILGUN') : (w === 'PULSE_CANNON' ? 'PLASMA' : w === 'SCATTER_BLAST' ? 'FLAK' : 'RAILGUN')}
@@ -319,38 +319,40 @@ export const ARHUD: React.FC<ARHUDProps> = ({
           </div>
         </div>
 
-        {/* Right Controls: EMP Ultimate & Main FIRE Trigger */}
-        <div className="flex items-center gap-3">
+        {/* Center: Primary FIRE Trigger Button (FPS Style) */}
+        <div className="absolute left-1/2 bottom-2 -translate-x-1/2 flex justify-center z-20">
+          <button
+            id="main-fire-button"
+            onClick={onFire}
+            disabled={stats.isOverheated}
+            className={`relative w-24 h-24 sm:w-28 sm:h-28 rounded-full border-4 flex flex-col items-center justify-center transition-transform duration-75 active:scale-90 shadow-2xl backdrop-blur-sm ${
+              stats.isOverheated
+                ? 'bg-red-950/60 border-red-500 text-red-400 cursor-not-allowed'
+                : 'bg-slate-900/40 border-cyan-400 text-cyan-300 hover:bg-cyan-900/50 shadow-[0_0_30px_rgba(6,182,212,0.5)]'
+            }`}
+          >
+            <Crosshair className={`w-8 h-8 sm:w-10 sm:h-10 ${stats.isOverheated ? 'opacity-50' : 'drop-shadow-[0_0_8px_#22d3ee]'}`} />
+            <span className="text-[11px] sm:text-xs font-orbitron font-black tracking-widest uppercase mt-1">
+              {stats.isOverheated ? (lang === 'id' ? 'PANAS' : 'OVERHEAT') : (lang === 'id' ? 'TEMBAK' : 'FIRE')}
+            </span>
+          </button>
+        </div>
+
+        {/* Right Controls: EMP Ultimate */}
+        <div className="flex flex-col items-end gap-3 relative z-10 w-32 justify-end">
           {/* EMP Ultimate Mega Blast */}
           <button
             onClick={onTriggerEMP}
             disabled={!isUltReady}
-            className={`relative flex flex-col items-center justify-center w-14 h-14 sm:w-16 sm:h-16 rounded-full border-2 transition-all active:scale-90 ${
+            className={`relative flex flex-col items-center justify-center w-16 h-16 sm:w-20 sm:h-20 rounded-full border-2 transition-all active:scale-90 ${
               isUltReady
                 ? 'bg-gradient-to-tr from-purple-700 to-indigo-500 border-purple-300 text-white shadow-[0_0_24px_rgba(168,85,247,0.9)] animate-pulse'
                 : 'bg-slate-950/80 border-slate-800 text-slate-500 opacity-60 cursor-not-allowed'
             }`}
           >
-            <Zap className={`w-5 h-5 sm:w-6 sm:h-6 ${isUltReady ? 'text-yellow-300' : 'text-slate-500'}`} />
-            <span className="text-[8px] sm:text-[9px] font-orbitron font-bold mt-0.5">
-              {isUltReady ? 'EMP BLAST' : `${Math.round(ultPercent)}%`}
-            </span>
-          </button>
-
-          {/* Primary FIRE Trigger Button */}
-          <button
-            id="main-fire-button"
-            onClick={onFire}
-            disabled={stats.isOverheated}
-            className={`w-20 h-20 sm:w-24 sm:h-24 rounded-full border-4 flex flex-col items-center justify-center transition-transform duration-75 active:scale-90 shadow-2xl ${
-              stats.isOverheated
-                ? 'bg-red-950/80 border-red-500/50 text-red-400 cursor-not-allowed'
-                : 'bg-gradient-to-b from-cyan-500 to-blue-700 border-cyan-300 text-white shadow-[0_0_28px_rgba(6,182,212,0.75)] hover:from-cyan-400 hover:to-blue-600'
-            }`}
-          >
-            <Crosshair className="w-7 h-7 sm:w-8 sm:h-8 drop-shadow-[0_0_6px_#fff]" />
-            <span className="text-[10px] sm:text-xs font-orbitron font-black tracking-wider uppercase mt-1">
-              {stats.isOverheated ? (lang === 'id' ? 'PANAS' : 'COOLING') : (lang === 'id' ? 'TEMBAK' : 'FIRE')}
+            <Zap className={`w-6 h-6 sm:w-7 sm:h-7 ${isUltReady ? 'text-yellow-300' : 'text-slate-500'}`} />
+            <span className="text-[9px] sm:text-[10px] font-orbitron font-bold mt-1 text-center leading-tight">
+              {isUltReady ? 'EMP\nBLAST' : `${Math.round(ultPercent)}%`}
             </span>
           </button>
         </div>

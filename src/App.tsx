@@ -92,6 +92,7 @@ export default function App() {
     showARGrid: true,
     language: 'id',
     particleDensity: 'high',
+    difficulty: 'NORMAL',
   });
 
   // Modals
@@ -439,6 +440,9 @@ export default function App() {
       lastTime = currentTime;
 
       const currentWaveCfg = GAME_WAVES[currentWaveIdx];
+      const diffMult = settingsRef.current.difficulty === 'EASY' ? 0.6 : settingsRef.current.difficulty === 'HARD' ? 1.5 : 1.0;
+      const hpMult = settingsRef.current.difficulty === 'EASY' ? 0.75 : settingsRef.current.difficulty === 'HARD' ? 1.5 : 1.0;
+      const spawnIntervalMult = settingsRef.current.difficulty === 'EASY' ? 1.5 : settingsRef.current.difficulty === 'HARD' ? 0.75 : 1.0;
 
       // 1. Spawning Monsters
       if (waveSpawnsLeftRef.current > 0 && currentTime >= nextSpawnTimeRef.current) {
@@ -985,6 +989,7 @@ export default function App() {
           highScore={stats.highScore}
           maxCombo={stats.maxCombo}
           settings={settings}
+          onUpdateSettings={(newS) => setSettings((prev) => ({ ...prev, ...newS }))}
           onStartGame={handleStartGame}
           onOpenTutorial={() => setIsTutorialOpen(true)}
           onOpenSettings={() => setIsSettingsOpen(true)}

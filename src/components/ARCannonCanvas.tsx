@@ -303,168 +303,199 @@ function drawMonsterEntity(ctx: CanvasRenderingContext2D, monster: Monster, radi
   const cfg = MONSTER_CONFIGS[monster.type];
 
   ctx.shadowColor = cfg.glowColor;
-  ctx.shadowBlur = 16;
+  ctx.shadowBlur = 12;
+
+  // Create a base organic radial gradient
+  const grad = ctx.createRadialGradient(0, 0, 0, 0, 0, radius);
+  grad.addColorStop(0, '#ffffff');
+  grad.addColorStop(0.3, cfg.color);
+  grad.addColorStop(1, '#020617');
 
   if (monster.type === 'DRONE') {
-    // Rotating outer ring with 3 energy blades
+    // Bio-mechanical Hornet / Germ Drone
     ctx.save();
-    ctx.rotate(t * 3);
-    ctx.strokeStyle = cfg.color;
-    ctx.lineWidth = 3;
-    ctx.beginPath();
-    ctx.arc(0, 0, radius, 0, Math.PI * 2);
-    ctx.stroke();
-
-    for (let i = 0; i < 3; i++) {
-      ctx.rotate((Math.PI * 2) / 3);
-      ctx.fillStyle = '#ffffff';
-      ctx.fillRect(radius - 3, -2, 6, 4);
+    ctx.rotate(t * 1.5);
+    
+    // Organic wings/membranes
+    ctx.fillStyle = 'rgba(6, 182, 212, 0.4)';
+    for (let i = 0; i < 4; i++) {
+      ctx.rotate(Math.PI / 2);
+      ctx.beginPath();
+      ctx.ellipse(radius * 0.8, 0, radius * 0.7, radius * 0.2, 0, 0, Math.PI * 2);
+      ctx.fill();
     }
-    ctx.restore();
-
-    // Central glowing core
+    
+    // Main bio-chassis
+    ctx.fillStyle = grad;
     ctx.beginPath();
-    ctx.arc(0, 0, radius * 0.48, 0, Math.PI * 2);
-    ctx.fillStyle = cfg.color;
-    ctx.fill();
-
-    // Inner eye
-    ctx.beginPath();
-    ctx.arc(0, 0, radius * 0.22, 0, Math.PI * 2);
-    ctx.fillStyle = '#ffffff';
-    ctx.fill();
-  } else if (monster.type === 'WYVERN') {
-    // Mechanical wings & dragon-like cyber body
-    const wingFlap = Math.sin(t * 8) * 0.5;
-
-    // Left Wing
-    ctx.save();
-    ctx.rotate(-0.3 + wingFlap);
-    ctx.fillStyle = cfg.color;
-    ctx.beginPath();
-    ctx.moveTo(-radius * 0.2, 0);
-    ctx.lineTo(-radius * 1.3, -radius * 0.6);
-    ctx.lineTo(-radius * 0.9, radius * 0.3);
+    // Jagged hexagon shape
+    for(let i=0; i<6; i++) {
+      const a = (i * Math.PI) / 3;
+      const r2 = radius * (i % 2 === 0 ? 0.6 : 0.45);
+      if(i===0) ctx.moveTo(Math.cos(a)*r2, Math.sin(a)*r2);
+      else ctx.lineTo(Math.cos(a)*r2, Math.sin(a)*r2);
+    }
     ctx.closePath();
     ctx.fill();
-    ctx.strokeStyle = '#ffffff';
-    ctx.lineWidth = 2;
+    ctx.strokeStyle = '#06b6d4';
+    ctx.lineWidth = 1.5;
     ctx.stroke();
+
+    // Central pulsing eye
+    ctx.beginPath();
+    ctx.arc(0, 0, radius * 0.2, 0, Math.PI * 2);
+    ctx.fillStyle = '#bae6fd';
+    ctx.fill();
     ctx.restore();
+
+  } else if (monster.type === 'WYVERN') {
+    // Mutant Pterodactyl / Organic Flyer
+    const wingFlap = Math.sin(t * 10) * 0.6;
+
+    // Fleshy Wings
+    ctx.save();
+    ctx.fillStyle = grad;
+    ctx.strokeStyle = '#9a3412';
+    ctx.lineWidth = 2;
+    
+    // Left Wing
+    ctx.beginPath();
+    ctx.moveTo(-radius * 0.1, 0);
+    ctx.quadraticCurveTo(-radius * 1.2, -radius * 0.8 + wingFlap * radius, -radius * 1.4, -radius * 0.2);
+    ctx.quadraticCurveTo(-radius * 0.8, radius * 0.4 - wingFlap * 10, -radius * 0.2, radius * 0.3);
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
 
     // Right Wing
-    ctx.save();
-    ctx.rotate(0.3 - wingFlap);
-    ctx.fillStyle = cfg.color;
     ctx.beginPath();
-    ctx.moveTo(radius * 0.2, 0);
-    ctx.lineTo(radius * 1.3, -radius * 0.6);
-    ctx.lineTo(radius * 0.9, radius * 0.3);
+    ctx.moveTo(radius * 0.1, 0);
+    ctx.quadraticCurveTo(radius * 1.2, -radius * 0.8 + wingFlap * radius, radius * 1.4, -radius * 0.2);
+    ctx.quadraticCurveTo(radius * 0.8, radius * 0.4 - wingFlap * 10, radius * 0.2, radius * 0.3);
     ctx.closePath();
     ctx.fill();
-    ctx.strokeStyle = '#ffffff';
-    ctx.lineWidth = 2;
     ctx.stroke();
     ctx.restore();
 
-    // Armored Head & Body
-    ctx.fillStyle = '#ea580c';
+    // Ribbed Body
+    ctx.fillStyle = grad;
     ctx.beginPath();
-    ctx.ellipse(0, 0, radius * 0.45, radius * 0.7, 0, 0, Math.PI * 2);
+    ctx.ellipse(0, 0, radius * 0.35, radius * 0.65, 0, 0, Math.PI * 2);
     ctx.fill();
-
-    // Cyber visor eye
+    
+    // Slit eyes
     ctx.fillStyle = '#fef08a';
-    ctx.fillRect(-radius * 0.2, -radius * 0.35, radius * 0.4, radius * 0.15);
-  } else if (monster.type === 'STALKER') {
-    // Stealth holographic phantom
-    ctx.save();
-    ctx.strokeStyle = cfg.color;
-    ctx.lineWidth = 2.5;
+    ctx.fillRect(-radius * 0.15, -radius * 0.4, radius * 0.1, radius * 0.08);
+    ctx.fillRect(radius * 0.05, -radius * 0.4, radius * 0.1, radius * 0.08);
 
-    // Outer glitching hexagon
+  } else if (monster.type === 'STALKER') {
+    // Shadow Crawler / Ectoplasmic Phantom
+    ctx.save();
+    ctx.fillStyle = grad;
     ctx.beginPath();
-    for (let i = 0; i < 6; i++) {
-      const angle = (i * Math.PI) / 3 + t * 1.5;
-      const x = Math.cos(angle) * radius;
-      const y = Math.sin(angle) * radius;
-      if (i === 0) ctx.moveTo(x, y);
-      else ctx.lineTo(x, y);
+    
+    // Undulating amoeba shape
+    const numPoints = 8;
+    for(let i=0; i<numPoints; i++) {
+      const a = (i * Math.PI * 2) / numPoints;
+      const wave = Math.sin(t * 3 + i) * 0.2;
+      const r = radius * (0.6 + wave);
+      if(i===0) ctx.moveTo(Math.cos(a)*r, Math.sin(a)*r);
+      else ctx.lineTo(Math.cos(a)*r, Math.sin(a)*r);
     }
     ctx.closePath();
-    ctx.stroke();
-
-    // Holographic diamond center
+    ctx.fill();
+    
+    // Eerie inner core
     ctx.rotate(-t * 2);
-    ctx.fillStyle = 'rgba(168, 85, 247, 0.4)';
-    ctx.fillRect(-radius * 0.35, -radius * 0.35, radius * 0.7, radius * 0.7);
-
-    ctx.restore();
-  } else if (monster.type === 'KAMI_SPORE') {
-    // Volatile ticking bomb with pulsing spikes
-    const pulse = 1 + Math.sin(t * 14) * 0.15;
-    ctx.fillStyle = cfg.color;
+    ctx.fillStyle = 'rgba(168, 85, 247, 0.6)';
     ctx.beginPath();
-    ctx.arc(0, 0, radius * 0.55 * pulse, 0, Math.PI * 2);
+    ctx.arc(0, 0, radius * 0.3, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+
+  } else if (monster.type === 'KAMI_SPORE') {
+    // Toxic Spore / Viral Node (Realistic germ look)
+    const pulse = 1 + Math.sin(t * 12) * 0.1;
+    ctx.fillStyle = grad;
+    ctx.beginPath();
+    ctx.arc(0, 0, radius * 0.6 * pulse, 0, Math.PI * 2);
     ctx.fill();
 
-    // Spikes
-    for (let i = 0; i < 8; i++) {
-      const angle = (i * Math.PI) / 4 + t * 4;
-      const sx = Math.cos(angle) * radius * 0.9 * pulse;
-      const sy = Math.sin(angle) * radius * 0.9 * pulse;
+    // Viral protein spikes
+    ctx.strokeStyle = '#7f1d1d';
+    ctx.lineWidth = Math.max(1, radius * 0.08);
+    const numSpikes = 12;
+    for (let i = 0; i < numSpikes; i++) {
+      const angle = (i * Math.PI * 2) / numSpikes + t * 0.5;
+      const r1 = radius * 0.6 * pulse;
+      const r2 = radius * 0.95 * pulse;
+      
+      const x1 = Math.cos(angle) * r1;
+      const y1 = Math.sin(angle) * r1;
+      const x2 = Math.cos(angle) * r2;
+      const y2 = Math.sin(angle) * r2;
+      
       ctx.beginPath();
-      ctx.arc(sx, sy, 3.5, 0, Math.PI * 2);
-      ctx.fillStyle = '#fef08a';
+      ctx.moveTo(x1, y1);
+      ctx.lineTo(x2, y2);
+      ctx.stroke();
+      
+      // Spike bulbs
+      ctx.beginPath();
+      ctx.arc(x2, y2, radius * 0.15, 0, Math.PI * 2);
+      ctx.fillStyle = '#ef4444';
       ctx.fill();
     }
 
-    // Warning alert ring
-    ctx.strokeStyle = 'rgba(239, 68, 68, 0.8)';
-    ctx.lineWidth = 2;
-    ctx.beginPath();
-    ctx.arc(0, 0, radius * 1.15, 0, Math.PI * 2);
-    ctx.stroke();
   } else if (monster.type === 'LEVIATHAN_BOSS') {
-    // Massive Dreadnought Cruiser
+    // Colossal Bio-Titan (Brain/Eye Monstrosity)
     ctx.save();
-    ctx.rotate(t * 0.4);
-
-    // Outer fortress barrier
-    ctx.strokeStyle = '#eab308';
-    ctx.lineWidth = 4;
+    
+    // Pulsing fleshy sac / main body
+    const breathe = 1 + Math.sin(t * 2) * 0.05;
+    ctx.scale(breathe, breathe);
+    
+    ctx.fillStyle = grad;
     ctx.beginPath();
-    ctx.arc(0, 0, radius, 0, Math.PI * 2);
-    ctx.stroke();
+    ctx.arc(0, 0, radius * 0.8, 0, Math.PI * 2);
+    ctx.fill();
 
-    // 4 Satellite Defense Orbs
-    for (let i = 0; i < 4; i++) {
-      const a = (i * Math.PI) / 2 + t * 1.8;
-      const ox = Math.cos(a) * (radius * 1.25);
-      const oy = Math.sin(a) * (radius * 1.25);
+    // Giant corrupted iris
+    ctx.beginPath();
+    ctx.arc(0, 0, radius * 0.4, 0, Math.PI * 2);
+    ctx.fillStyle = '#854d0e';
+    ctx.fill();
+    
+    ctx.beginPath();
+    ctx.ellipse(0, 0, radius * 0.1, radius * 0.3, 0, 0, Math.PI * 2);
+    ctx.fillStyle = '#000000';
+    ctx.fill();
+
+    // Writhing tentacles
+    ctx.strokeStyle = '#ca8a04';
+    ctx.lineWidth = radius * 0.1;
+    ctx.lineCap = 'round';
+    for (let i = 0; i < 6; i++) {
+      const a = (i * Math.PI * 2) / 6 + t * 0.3;
+      const tWave = Math.sin(t * 3 + i) * radius * 0.3;
+      
       ctx.beginPath();
-      ctx.arc(ox, oy, 8, 0, Math.PI * 2);
-      ctx.fillStyle = '#38bdf8';
-      ctx.fill();
+      ctx.moveTo(Math.cos(a) * radius * 0.7, Math.sin(a) * radius * 0.7);
+      ctx.quadraticCurveTo(
+        Math.cos(a) * radius * 1.2 + tWave, 
+        Math.sin(a) * radius * 1.2 - tWave, 
+        Math.cos(a) * radius * 1.5, 
+        Math.sin(a) * radius * 1.5
+      );
       ctx.stroke();
     }
-
-    // Core generator
-    ctx.beginPath();
-    ctx.arc(0, 0, radius * 0.5, 0, Math.PI * 2);
-    ctx.fillStyle = '#ca8a04';
-    ctx.fill();
-
-    // Eye reactor
-    ctx.beginPath();
-    ctx.arc(0, 0, radius * 0.25, 0, Math.PI * 2);
-    ctx.fillStyle = '#fef08a';
-    ctx.fill();
 
     ctx.restore();
   }
 
   // Draw Glowing Weakpoint Target if exposed
+
   if (monster.hasWeakpoint && !monster.isDying) {
     const wpAngle = monster.weakpointAngle;
     const wpDist = radius * 0.65;

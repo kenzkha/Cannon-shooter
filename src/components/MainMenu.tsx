@@ -15,12 +15,14 @@ import {
   Sparkles,
   Crosshair,
   Shield,
+  Gauge
 } from 'lucide-react';
 
 interface MainMenuProps {
   highScore: number;
   maxCombo: number;
   settings: GameSettings;
+  onUpdateSettings: (newSettings: Partial<GameSettings>) => void;
   onStartGame: (wave?: number) => void;
   onOpenTutorial: () => void;
   onOpenSettings: () => void;
@@ -31,6 +33,7 @@ export const MainMenu: React.FC<MainMenuProps> = ({
   highScore,
   maxCombo,
   settings,
+  onUpdateSettings,
   onStartGame,
   onOpenTutorial,
   onOpenSettings,
@@ -124,6 +127,26 @@ export const MainMenu: React.FC<MainMenuProps> = ({
 
       {/* Bottom Main Action Buttons */}
       <div className="w-full max-w-sm flex flex-col gap-2.5">
+        {/* Difficulty Selection */}
+        <div className="flex bg-slate-950/80 backdrop-blur-md rounded-2xl border border-slate-800 p-1 mb-2">
+          {(['EASY', 'NORMAL', 'HARD'] as const).map((diff) => (
+            <button
+              key={diff}
+              onClick={() => onUpdateSettings({ difficulty: diff })}
+              className={`flex-1 py-2.5 rounded-xl text-xs font-orbitron font-bold transition flex items-center justify-center gap-1.5 ${
+                settings.difficulty === diff
+                  ? diff === 'EASY' ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-400' 
+                    : diff === 'NORMAL' ? 'bg-cyan-500/20 text-cyan-400 border border-cyan-400'
+                    : 'bg-red-500/20 text-red-400 border border-red-400'
+                  : 'text-slate-400 hover:bg-slate-900 border border-transparent'
+              }`}
+            >
+              <Gauge className="w-3.5 h-3.5" />
+              <span>{isIndo ? (diff === 'EASY' ? 'MUDAH' : diff === 'NORMAL' ? 'NORMAL' : 'SULIT') : diff}</span>
+            </button>
+          ))}
+        </div>
+
         {/* Wave Selection Accordion / Picker */}
         {showWaveSelect && (
           <div className="bg-slate-950/90 backdrop-blur-md p-3 rounded-2xl border border-cyan-500/40 mb-2 animate-in fade-in slide-in-from-bottom-2">

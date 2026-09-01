@@ -150,6 +150,8 @@ export interface PlayerStats {
   ultimateCharge: number; // 0 to 100
 }
 
+export type Difficulty = 'EASY' | 'NORMAL' | 'HARD';
+
 export interface GameSettings {
   aimMode: AimMode;
   gyroSensitivity: number;
@@ -161,4 +163,5 @@ export interface GameSettings {
   showARGrid: boolean;
   language: Language;
   particleDensity: 'low' | 'high';
+  difficulty: Difficulty;
 }

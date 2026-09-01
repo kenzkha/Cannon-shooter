@@ -104,49 +104,58 @@ export const FirstPersonCannon: React.FC<FirstPersonCannonProps> = ({
           strokeOpacity="0.45"
         />
 
-        {/* Base Turret Mount (Wide Cyber Chassis) */}
+        {/* Base Turret Mount (Realistic Gun Chassis) */}
         <path
-          d="M 20 220 L 70 140 L 270 140 L 320 220 Z"
+          d="M 60 220 L 90 120 L 250 120 L 280 220 Z"
           fill="url(#metalDark)"
-          stroke="#475569"
+          stroke="#1e293b"
           strokeWidth="2"
         />
 
-        {/* Left Armor Wing */}
+        {/* Left Armor Plating */}
         <path
-          d="M 50 160 L 95 110 L 130 130 L 75 180 Z"
+          d="M 80 180 L 105 110 L 140 125 L 95 200 Z"
           fill="url(#metalPlate)"
-          stroke="#64748b"
+          stroke="#334155"
+          strokeWidth="1.5"
+        />
+        
+        {/* Right Armor Plating */}
+        <path
+          d="M 260 180 L 235 110 L 200 125 L 245 200 Z"
+          fill="url(#metalPlate)"
+          stroke="#334155"
           strokeWidth="1.5"
         />
 
-        {/* Right Armor Wing */}
-        <path
-          d="M 290 160 L 245 110 L 210 130 L 265 180 Z"
-          fill="url(#metalPlate)"
-          stroke="#64748b"
-          strokeWidth="1.5"
-        />
-
-        {/* Center Main Housing */}
+        {/* Central Receiver / Upper Receiver */}
         <rect
-          x="120"
-          y="80"
-          width="100"
-          height="90"
-          rx="8"
+          x="125"
+          y="70"
+          width="90"
+          height="110"
+          rx="6"
           fill="url(#metalDark)"
-          stroke="#64748b"
+          stroke="#334155"
           strokeWidth="2"
         />
 
-        {/* Heat Exhaust Grids (Left & Right) */}
+        {/* Picatinny Rail (Top) */}
+        <path
+          d="M 130 65 L 210 65 L 210 70 L 130 70 Z"
+          fill="#0f172a"
+        />
+        {Array.from({length: 8}).map((_, i) => (
+          <rect key={i} x={135 + i * 10} y="62" width="4" height="4" fill="#334155" />
+        ))}
+
+        {/* Heat Exhaust Vents */}
         <rect
-          x="128"
-          y="100"
-          width="20"
-          height="50"
-          rx="3"
+          x="132"
+          y="90"
+          width="16"
+          height="60"
+          rx="2"
           fill={heatGlowColor}
           stroke="#ef4444"
           strokeWidth={isOverheated ? 1.5 : 0}
@@ -154,135 +163,70 @@ export const FirstPersonCannon: React.FC<FirstPersonCannonProps> = ({
         />
         <rect
           x="192"
-          y="100"
-          width="20"
-          height="50"
-          rx="3"
+          y="90"
+          width="16"
+          height="60"
+          rx="2"
           fill={heatGlowColor}
           stroke="#ef4444"
           strokeWidth={isOverheated ? 1.5 : 0}
           className="transition-colors duration-150"
         />
 
-        {/* Heat Vent Grille Lines */}
-        <line x1="128" y1="112" x2="148" y2="112" stroke="#000" strokeWidth="2" />
-        <line x1="128" y1="125" x2="148" y2="125" stroke="#000" strokeWidth="2" />
-        <line x1="128" y1="138" x2="148" y2="138" stroke="#000" strokeWidth="2" />
-        <line x1="192" y1="112" x2="212" y2="112" stroke="#000" strokeWidth="2" />
-        <line x1="192" y1="125" x2="212" y2="125" stroke="#000" strokeWidth="2" />
-        <line x1="192" y1="138" x2="212" y2="138" stroke="#000" strokeWidth="2" />
+        {/* Vent details */}
+        {Array.from({length: 5}).map((_, i) => (
+          <line key={`L${i}`} x1="132" y1={100 + i * 12} x2="148" y2={100 + i * 12} stroke="#000" strokeWidth="2.5" />
+        ))}
+        {Array.from({length: 5}).map((_, i) => (
+          <line key={`R${i}`} x1="192" y1={100 + i * 12} x2="208" y2={100 + i * 12} stroke="#000" strokeWidth="2.5" />
+        ))}
 
         {/* Weapon Specific Barrels */}
         {weapon === 'PULSE_CANNON' && (
-          // Dual Plasma Barrels
+          // Tactical Plasma Rifle Barrels
           <g>
             {/* Left Barrel */}
-            <rect
-              x="138"
-              y="20"
-              width="18"
-              height="75"
-              rx="4"
-              fill="url(#metalPlate)"
-              stroke="#38bdf8"
-              strokeWidth="1.5"
-            />
-            <rect x="135" y="16" width="24" height="10" rx="2" fill="#0284c7" />
-            <circle cx="147" cy="20" r="4" fill="#bae6fd" />
+            <rect x="142" y="10" width="12" height="60" fill="url(#metalPlate)" stroke="#1e293b" strokeWidth="1" />
+            <rect x="138" y="25" width="20" height="15" rx="2" fill="#0f172a" />
+            <circle cx="148" cy="15" r="4" fill="#38bdf8" className="animate-pulse" />
 
             {/* Right Barrel */}
-            <rect
-              x="184"
-              y="20"
-              width="18"
-              height="75"
-              rx="4"
-              fill="url(#metalPlate)"
-              stroke="#38bdf8"
-              strokeWidth="1.5"
-            />
-            <rect x="181" y="16" width="24" height="10" rx="2" fill="#0284c7" />
-            <circle cx="193" cy="20" r="4" fill="#bae6fd" />
+            <rect x="186" y="10" width="12" height="60" fill="url(#metalPlate)" stroke="#1e293b" strokeWidth="1" />
+            <rect x="182" y="25" width="20" height="15" rx="2" fill="#0f172a" />
+            <circle cx="192" cy="15" r="4" fill="#38bdf8" className="animate-pulse" />
           </g>
         )}
 
         {weapon === 'SCATTER_BLAST' && (
-          // Tri-Barrel Heavy Flak
+          // Heavy Shotgun / Flak
           <g>
-            {/* Center Barrel */}
-            <rect
-              x="157"
-              y="15"
-              width="26"
-              height="80"
-              rx="4"
-              fill="url(#metalPlate)"
-              stroke="#f97316"
-              strokeWidth="2"
-            />
-            {/* Left Angled Nozzle */}
-            <rect
-              x="130"
-              y="26"
-              width="20"
-              height="70"
-              rx="4"
-              transform="rotate(-8 140 60)"
-              fill="url(#metalPlate)"
-              stroke="#ea580c"
-              strokeWidth="1.5"
-            />
-            {/* Right Angled Nozzle */}
-            <rect
-              x="190"
-              y="26"
-              width="20"
-              height="70"
-              rx="4"
-              transform="rotate(8 200 60)"
-              fill="url(#metalPlate)"
-              stroke="#ea580c"
-              strokeWidth="1.5"
-            />
-            {/* Flak Muzzle rings */}
-            <circle cx="170" cy="18" r="8" fill="#fdba74" />
+            <rect x="150" y="5" width="40" height="70" rx="4" fill="url(#metalPlate)" stroke="#334155" strokeWidth="2" />
+            {/* Choke details */}
+            <rect x="146" y="15" width="48" height="12" rx="1" fill="#0f172a" />
+            {/* Tri-bore muzzle */}
+            <circle cx="160" cy="10" r="5" fill="#f97316" className="animate-pulse" />
+            <circle cx="180" cy="10" r="5" fill="#f97316" className="animate-pulse" />
+            <circle cx="170" cy="20" r="6" fill="#fb923c" />
           </g>
         )}
 
         {weapon === 'ION_RAILGUN' && (
-          // Piercing Linear Accelerator Rail
+          // Sniper / Railgun Accel
           <g>
-            {/* Main Center Rail */}
-            <rect
-              x="158"
-              y="5"
-              width="24"
-              height="95"
-              rx="3"
-              fill="url(#metalDark)"
-              stroke="#a855f7"
-              strokeWidth="2"
-            />
-            {/* Focusing Magnetic Ring 1 */}
-            <rect x="150" y="24" width="40" height="8" rx="2" fill="#c084fc" />
-            {/* Focusing Magnetic Ring 2 */}
-            <rect x="152" y="50" width="36" height="8" rx="2" fill="#9333ea" />
-            {/* Focusing Magnetic Ring 3 */}
-            <rect x="154" y="74" width="32" height="8" rx="2" fill="#7e22ce" />
-            {/* Ion Core Crystal */}
-            <polygon points="170,8 165,18 175,18" fill="#ffffff" />
+            <rect x="160" y="0" width="20" height="70" rx="2" fill="url(#metalDark)" stroke="#475569" strokeWidth="2" />
+            {/* Coil rings */}
+            <rect x="156" y="15" width="28" height="6" rx="1" fill="#c084fc" />
+            <rect x="156" y="35" width="28" height="6" rx="1" fill="#a855f7" />
+            <rect x="156" y="55" width="28" height="6" rx="1" fill="#9333ea" />
+            {/* Muzzle tip */}
+            <polygon points="170,0 162,10 178,10" fill="#d8b4fe" />
           </g>
         )}
 
-        {/* Center Targeting Core LED HUD */}
-        <circle cx="170" cy="120" r="14" fill="#020617" stroke="#38bdf8" strokeWidth="2" />
-        <circle
-          cx="170"
-          cy="120"
-          r="7"
-          fill={weaponInfo.color}
-          className="animate-pulse"
-        />
+        {/* Optical Sight / Holographic Scope Center */}
+        <rect x="155" y="105" width="30" height="40" rx="4" fill="#020617" stroke="#334155" strokeWidth="2" />
+        <circle cx="170" cy="125" r="10" fill="#020617" stroke={weaponInfo.color} strokeWidth="1.5" />
+        <circle cx="170" cy="125" r="4" fill={weaponInfo.color} className="animate-pulse" />
 
         {/* Status Text on Cannon */}
         <text
