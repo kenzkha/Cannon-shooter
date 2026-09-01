@@ -1,0 +1,7 @@
+{
+  "name": "AR Cannon Shooter: Sky Assault",
+  "description": "First-person AR cannon shooter game with real-time rear camera backdrop, motion gyro/precision aiming controls, flying monster waves, and combo scoring system.",
+  "requestFramePermissions": ["camera"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
+
